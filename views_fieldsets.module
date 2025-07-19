@@ -49,7 +49,7 @@ function views_fieldsets_theme() {
  * Implements hook_theme_registry_alter().
  */
 function views_fieldsets_theme_registry_alter(&$registry) {
-  foreach ($registry as $hook => $info) {
+  foreach ($registry as $hook => &$info) {
     // Splice in our generic preprocessor for all fieldset types.
     if (strpos($hook, 'views_fieldsets_') === 0 && isset($info['views_fieldsets_label'])) {
       // It must come directly after 'template_preprocess', or first if that doesn't exist.
@@ -61,7 +61,6 @@ function views_fieldsets_theme_registry_alter(&$registry) {
         array_unshift($info['preprocess functions'], '_template_preprocess_views_fieldsets');
       }
     }
-    unset($info);
   }
 }
 
