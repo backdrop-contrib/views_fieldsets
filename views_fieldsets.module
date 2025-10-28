@@ -324,6 +324,13 @@ function _template_preprocess_views_fieldsets(&$vars) {
   $fieldset_field = $vars['fieldset_field'];
   $views_field = $vars['fields'][$fieldset_field];
   $views_field_options = $views_field->handler->options;
+
+  $type = $views_field_options['fieldset']['type'];
+
+  $vars['attributes'] = array(
+    'data-module' => 'views_fieldsets',
+  );
+
   // CSS classes.
   $classes_string = $views_field->handler->tokenize_value($views_field_options['fieldset']['classes'], $view->row_index);
   $classes = array_filter(explode(' ', $classes_string));
@@ -336,6 +343,14 @@ function _template_preprocess_views_fieldsets(&$vars) {
   }
   if (!empty($views_field_options['fieldset']['collapsed'])) {
     $classes[] = 'collapsed';
+    if ($type == 'details') {
+      $vars['attributes']['open'] = FALSE;
+    }
+  }
+  else {
+    if ($type == 'details') {
+      $vars['attributes']['open'] = TRUE;
+    }
   }
   $vars['classes'] = $classes;
   // Fieldset legend.
@@ -346,14 +361,11 @@ function _template_preprocess_views_fieldsets(&$vars) {
     $vars['legend'] = $views_field->label;
   }
   $vars['legend'] = t($vars['legend'], array(), array('context' => 'views_fieldsets'));
-  // Attributes?
-  $vars['attributes_array'] = array(
-    'data-module' => 'views_fieldsets',
-  );
+
   if (!empty($views_field_options['fieldset']['id'])) {
     $id = $views_field_options['fieldset']['id'];
     $id = $views_field->handler->tokenize_value($id, $view->row_index);
-    $vars['attributes_array']['id'] = backdrop_html_id($id);
+    $vars['attributes']['id'] = backdrop_html_id($id);
   }
 }
 
